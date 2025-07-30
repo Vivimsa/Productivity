@@ -1,0 +1,91 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+lerna-debug.log*
+
+# Diagnostic reports (Node.js)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Cobertura de testes
+lib-cov/
+coverage/
+*.lcov
+.nyc_output/
+
+# Grunt cache
+.grunt/
+
+# Diretórios de dependência/transpiler
+bower_components/
+jspm_packages/
+web_modules/
+
+# Node native
+.lock-wscript
+build/Release/
+
+# node_modules (dependências)
+node_modules/
+
+# Cache de TypeScript
+*.tsbuildinfo
+
+# Cache do npm
+.npm
+
+# Cache do ESLint
+.eslintcache
+
+# Histórico do REPL
+.node_repl_history
+
+# Saída de 'npm pack'
+*.tgz
+
+# Arquivo de integridade do Yarn
+.yarn-integrity
+
+# Arquivos de ambiente sensíveis
+.env
+.env.*
+!*.env.example
+
+# Cache e build de diversas ferramentas
+.cache/
+.parcel-cache/
+.cache/
+.temp/
+.next/
+.nuxt/
+dist/
+out/
+
+# SvelteKit / VitePress / Docusaurus / Serverless / etc
+.svelte-kit/
+.vitepress/dist/
+.vitepress/cache/
+.docusaurus/
+.serverless/
+.fusebox/
+.dynamodb/
+.firebase/
+
+# VS Code para testes de extensão
+.vscode-test/
+
+# Yarn v3 com Plug’n’Play
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions

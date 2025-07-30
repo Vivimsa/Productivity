@@ -22,6 +22,7 @@
     "helmet": "^8.1.0",
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.2.2",
+    "sqlite3": "^5.1.7",
     "typeorm": "^0.3.25"
   },
   "devDependencies": {

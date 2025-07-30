@@ -5,15 +5,11 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 export const AppDataSource = new DataSource({
-    type: 'mysql',
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT || '3306'),
-    username: process.env.DB_USER,
-    password: process.env.DB_PASS,
-    database: process.env.DB_NAME,
-    synchronize: process.env.NODE_ENV === 'development', // Disable in production
-    logging: process.env.NODE_ENV === 'development',
-    entities: [User],
-    subscribers: [],
+    type: 'sqlite',
+    database: './src/config/database.sqlite',
+    synchronize: true,
+    logging: false,
+    entities: ['./src/models/*.ts'],
     migrations: [],
-})
+    subscribers: [],
+});
