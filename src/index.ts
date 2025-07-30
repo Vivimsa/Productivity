@@ -1,22 +1,37 @@
+import 'reflect-metadata'
 import express from 'express'
+import helmet from 'helmet'
+import cors from 'cors'
+import dotenv from 'dotenv'
+import { AppDataSource } from './config/database'
+import { errorHandler } from './middleware/errorHandler'
+import userRoutes from './routes/userRoutes'
+
+dotenv.config()
 
 const app = express()
-const PORT = process.env.PORT || 3000
+const port = process.env.PORT || 3000
 
-app.get('/', (req,res) => {
- res.send("Hello, world")
-})
+// Security middleware
+app.use(helmet())
+app.use(cors())
+app.use(express.json({ limit: '10kb' }))
 
-app.listen(PORT,() => {
- console.log(`Servidor rodando em http://localhost:${PORT}`)
-})
+// Routes
+app.use('/api/v1/users', userRoutes)
 
-app.route('/imovel')
-    .post((req,res)=>{
-       res.send('POST')
+// Global error handling
+app.use(errorHandler)
+
+// Database connection and server startup
+AppDataSource.initialize()
+    .then(() => {
+        console.log('Database connected successfully.')
+        app.listen(port, () => {
+            console.log(`Server running on port ${port} in ${process.env.NODE_ENV} mode`)
+        })
     })
-    .get((req,res)=>{
-       res.send('GET')
+    .catch((error) => {
+        console.error('Error connecting to database:', error)
+        process.exit(1)
     })
-
-
