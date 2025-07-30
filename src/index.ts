@@ -10,3 +10,13 @@ app.get('/', (req,res) => {
 app.listen(PORT,() => {
  console.log(`Servidor rodando em http://localhost:${PORT}`)
 })
+
+app.route('/imovel')
+    .post((req,res)=>{
+       res.send('POST')
+    })
+    .get((req,res)=>{
+       res.send('GET')
+    })
+
+
