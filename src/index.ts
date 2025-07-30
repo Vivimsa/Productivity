@@ -6,6 +6,8 @@ import dotenv from 'dotenv'
 import { AppDataSource } from './config/database'
 import { errorHandler } from './middleware/errorHandler'
 import userRoutes from './routes/userRoutes'
+import authRoutes from './routes/authRoutes';
+import { checkJwt } from './middleware/checkJwt';
 
 dotenv.config()
 
@@ -19,6 +21,8 @@ app.use(express.json({ limit: '10kb' }))
 
 // Routes
 app.use('/api/v1/users', userRoutes)
+app.use('/auth', authRoutes);
+app.use('/users', checkJwt, userRoutes);
 
 // Global error handling
 app.use(errorHandler)
