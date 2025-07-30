@@ -1,18 +1,12 @@
-import express, { Request, Response } from "express";
-import { obterOrgaos, Orgao } from "./client";
+import express from 'express'
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const app = express()
+const PORT = process.env.PORT || 3000
 
-app.get("/orgaos", async (req: Request, res: Response) => {
-    try {
-        const page = Number(req.query.page) || 1;
-        const orgaos: Orgao[] = await obterOrgaos(page);
-        res.json({ data: orgaos, page });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Falha ao buscar órgãos" });
-    }
-});
+app.get('/', (req,res) => {
+ res.send("Hello, world")
+})
 
-app.listen(PORT, () => console.log(`Server rodando em http://localhost:${PORT}`));
+app.listen(PORT,() => {
+ console.log(`Servidor rodando em http://localhost:${PORT}`)
+})
