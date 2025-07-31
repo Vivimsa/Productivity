@@ -1,11 +1,21 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert, BeforeUpdate } from 'typeorm'
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn,
+    BeforeInsert,
+    BeforeUpdate,
+    OneToMany
+} from 'typeorm'
 import bcrypt from 'bcrypt'
+import {Meta} from "./Meta";
 
 
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    id!: number
+    userId!: number
 
     @Column()
     name!: string
@@ -21,6 +31,9 @@ export class User {
 
     @UpdateDateColumn()
     updatedAt!: Date
+
+    @OneToMany(() => Meta,(meta) => meta.user)
+    metas!:Meta[]
 
     @BeforeInsert()
     @BeforeUpdate()
