@@ -5,9 +5,11 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { AppDataSource } from './config/database'
 import { errorHandler } from './middleware/errorHandler'
+import { checkJwt } from './middleware/checkJwt';
 import userRoutes from './routes/userRoutes'
 import authRoutes from './routes/authRoutes';
-import { checkJwt } from './middleware/checkJwt';
+import studiesRoutes from './routes/metasRoutes';
+import metasRoutes from "./routes/metasRoutes";
 
 dotenv.config()
 
@@ -21,8 +23,9 @@ app.use(express.json({ limit: '10kb' }))
 
 // Routes
 app.use('/api/v1/users', userRoutes)
-app.use('/auth', authRoutes);
-app.use('/users', checkJwt, userRoutes);
+app.use('/auth', authRoutes)
+app.use('/users', checkJwt, userRoutes)
+app.use('/metas', metasRoutes)
 
 // Global error handling
 app.use(errorHandler)
