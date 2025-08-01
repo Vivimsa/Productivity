@@ -3,6 +3,6 @@ import {cadastrarMeta} from "../controllers/metasController";
 
 const router=Router()
 
-router.route('/metas').post(cadastrarMeta)
+router.route('/').post(cadastrarMeta)
 
 export default router
