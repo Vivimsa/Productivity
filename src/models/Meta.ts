@@ -11,7 +11,7 @@ import {Type} from "class-transformer";
 @Entity()
 export class Meta{
     @PrimaryGeneratedColumn()
-    metaId!:number
+    id!:number
 
     @Column()
     descricao!:string

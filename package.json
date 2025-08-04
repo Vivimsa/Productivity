@@ -25,6 +25,7 @@
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
     "mysql": "^2.18.1",
+    "prettier": "^3.6.2",
     "reflect-metadata": "^0.2.2",
     "sqlite3": "^5.1.7",
     "typeorm": "^0.3.25"

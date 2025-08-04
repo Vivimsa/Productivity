@@ -15,7 +15,7 @@ import {Meta} from "./Meta";
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
-    userId!: number
+    id!: number
 
     @Column()
     name!: string

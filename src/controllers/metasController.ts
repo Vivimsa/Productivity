@@ -6,20 +6,36 @@ import {validateOrReject} from "class-validator";
 import {User} from "../models/User";
 
 const metaRepository = AppDataSource.getRepository(Meta)
-const userRepository = AppDataSource.getRepository(User)
 export const cadastrarMeta = async (req: Request, res: Response,next: NextFunction) => {
-    const {userId, descricao, data_inicio,data_fim} = req.body
-    const meta = metaRepository.create({descricao, data_inicio,data_fim})
+    const {descricao, data_inicio,data_fim,user} = req.body
+    const meta = metaRepository.create({descricao, data_inicio,data_fim, user})
     await validateOrReject(meta)
     await metaRepository.save(meta)
 
     res.status(201).json({
         status:'sucess',
             data:{
+            id: meta.id,
+            user: meta.user,
             descricao: meta.descricao,
             data_inicio: meta.data_inicio,
             data_fim: meta.data_fim
         }
     })
+}
+
+export const getMetasByUser = async (req: Request, res: Response, next: NextFunction)=> {
+    const metas = await metaRepository.findOne({
+        where: {user: {id: +req.params.userId}},
+        select: {
+            id: true,
+            descricao: true,
+            data_inicio: true,
+            data_fim: true,
+            user: { id: true }
+        }
+    })
+
+    res.json({status:'sucess', data: metas})
 }
 

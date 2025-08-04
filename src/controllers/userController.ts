@@ -8,7 +8,7 @@ const userRepository = AppDataSource.getRepository(User)
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const users = await userRepository.find({
-            select: ['userId', 'name', 'email', 'createdAt'],
+            select: ['id', 'name', 'email', 'createdAt'],
         })
         res.json({ status: 'success', data: users })
     } catch (err) {
@@ -19,8 +19,8 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = await userRepository.findOne({
-            where: { userId: parseInt(req.params.id) },
-            select: ['userId', 'name', 'email', 'createdAt'],
+            where: { id: parseInt(req.params.id) },
+            select: ['id', 'name', 'email', 'createdAt'],
         })
         if (!user) {
             throw new AppError('User not found', 404)
@@ -44,7 +44,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         res.status(201).json({
             status: 'success',
             data: {
-                id: user.userId,
+                id: user.id,
                 name: user.name,
                 email: user.email,
             },
@@ -57,7 +57,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = await userRepository.findOne({
-            where: { userId: parseInt(req.params.id) },
+            where: { id: parseInt(req.params.id) },
         })
 
         if (!user) {
@@ -70,7 +70,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
         res.json({
             status: 'success',
             data: {
-                id: updatedUser.userId,
+                id: updatedUser.id,
                 name: updatedUser.name,
                 email: updatedUser.email,
             },
