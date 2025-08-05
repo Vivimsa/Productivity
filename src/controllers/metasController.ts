@@ -75,5 +75,14 @@ export const getUmaMetaByUser = async (req: Request, res: Response)=> {
 
 
 
+export const updateMeta = async (req:Request, rep:Response) => {
+    const meta = await metaRepository.find({
+        where: {id: parseInt(req.params.id)}
+    })
 
+    metaRepository.merge(meta,req.body)
+    const updateMeta = await metaRepository.save(meta)
+
+    
+}
 
