@@ -24,8 +24,8 @@ export const cadastrarMeta = async (req: Request, res: Response,next: NextFuncti
     })
 }
 
-export const getMetasByUser = async (req: Request, res: Response, next: NextFunction)=> {
-    const metas = await metaRepository.findOne({
+export const getMetasByUser = async (req: Request, res: Response)=> {
+    const metas = await metaRepository.find({
         where: {user: {id: +req.params.userId}},
         select: {
             id: true,
@@ -36,6 +36,44 @@ export const getMetasByUser = async (req: Request, res: Response, next: NextFunc
         }
     })
 
-    res.json({status:'sucess', data: metas})
+   res.json({status:'sucess', data: metas})
 }
+
+export const getUmaMetaByUser = async (req: Request, res: Response)=> {
+     const UmaMeta = await metaRepository.findOne({
+         where: {user: {id: +req.params.userId}, id: +req.params.metaId},
+         select: {
+             id: true,
+             user: true,
+             descricao: true}
+     })
+
+    res.json({status: 'Sucess', data:UmaMeta})
+ }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
