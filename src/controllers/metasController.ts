@@ -51,38 +51,45 @@ export const getUmaMetaByUser = async (req: Request, res: Response)=> {
     res.json({status: 'Sucess', data:UmaMeta})
  }
 
+ export const updateMeta = async (req:Request, res:Response) => {
+    const meta = await metaRepository.findOne({ where: {user: {id: +req.params.userId}, id: +req.params.metaId} });
+
+    if (!meta) {
+        return res.status(404).json({ status: 'error', message: 'Meta não encontrada' });
+    }
+
+    metaRepository.merge(meta, req.body);
+    const updatedMeta = await metaRepository.save(meta);
+    return res.json({ status: 'success',
+        data: updatedMeta });
+}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export const updateMeta = async (req:Request, rep:Response) => {
-    const meta = await metaRepository.find({
-        where: {id: parseInt(req.params.id)}
+export const deleteMeta = async(req: Request, res: Response)=> {
+    const meta = await metaRepository.findOne({
+        where: {user: {id: +req.params.id}, id:+req.params.id}
     })
 
-    metaRepository.merge(meta,req.body)
-    const updateMeta = await metaRepository.save(meta)
+    if (meta) {
+        await metaRepository.delete(meta)
+    }
 
-    
+    res.json({status:'sucess', message: "Meta excluída com sucesso!"})
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
