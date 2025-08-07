@@ -10,6 +10,7 @@ import {
 } from 'typeorm'
 import bcrypt from 'bcrypt'
 import {Meta} from "./Meta";
+import {Tarefa} from "./Tarefa";
 
 
 @Entity()
@@ -32,8 +33,11 @@ export class User {
     @UpdateDateColumn()
     updatedAt!: Date
 
-    @OneToMany(() => Meta,(meta) => meta.user)
+    @OneToMany(() => Meta,(meta) => meta.user,{onDelete:'CASCADE'})
     metas!:Meta[]
+
+    @OneToMany(() => Tarefa,(tarefa) => tarefa.user,{onDelete:'CASCADE'})
+    tarefa!: Tarefa[]
 
     @BeforeInsert()
     @BeforeUpdate()

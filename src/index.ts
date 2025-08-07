@@ -9,6 +9,7 @@ import { checkJwt } from './middleware/checkJwt';
 import userRoutes from './routes/userRoutes'
 import authRoutes from './routes/authRoutes';
 import metasRoutes from "./routes/metasRoutes";
+import tarefaRoutes from "./routes/tarefaRoutes";
 
 dotenv.config()
 
@@ -25,6 +26,7 @@ app.use('/api/v1/users', userRoutes)
 app.use('/auth', authRoutes)
 app.use('/users', checkJwt, userRoutes)
 app.use('/metas', metasRoutes)
+app.use('/tarefa', tarefaRoutes)
 
 // Global error handling
 app.use(errorHandler)

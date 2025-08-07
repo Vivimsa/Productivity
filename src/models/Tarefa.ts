@@ -2,20 +2,23 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
-    ManyToOne, OneToMany
+    ManyToOne
 } from 'typeorm'
 import {User} from "./User";
-import {Tarefa} from "./Tarefa"
 import {IsDateString, MinDate} from "class-validator";
 import {Type} from "class-transformer";
+import {Meta} from "./Meta"
 
 @Entity()
-export class Meta{
+export class Tarefa{
     @PrimaryGeneratedColumn()
     id!:number
 
     @Column()
     descricao!:string
+
+    @Column()
+    registro_tempo!:string
 
     @Column({type:'date'})
     @IsDateString({}, { message: 'data_inicio deve ser uma data ISO válida (yyyy-MM-dd)' })
@@ -25,11 +28,11 @@ export class Meta{
     @IsDateString({}, { message: 'data_fim deve ser uma data ISO válida (yyyy-MM-dd)' })
     data_fim!:string
 
-    @ManyToOne(() => User,(user) => user.metas,{onDelete:'CASCADE'})
-    user!:User
+    @ManyToOne(() => Meta,(meta) => meta.tarefa,{onDelete:'CASCADE'})
+    meta!:Meta
 
-    @OneToMany(() => Tarefa,(tarefa) => tarefa.meta, {onDelete:'CASCADE'})
-    tarefa!:Tarefa
+    @ManyToOne(() => User,(user)=> user.tarefa,{onDelete:'CASCADE'})
+    user!:User
 }
 
 
