@@ -6,7 +6,6 @@ import {
 } from 'typeorm'
 import {User} from "./User";
 import {IsDateString, MinDate} from "class-validator";
-import {Type} from "class-transformer";
 import {Meta} from "./Meta"
 
 @Entity()

@@ -22,10 +22,11 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
             where: { id: parseInt(req.params.id) },
             select: ['id', 'name', 'email', 'createdAt'],
         })
-        if (!user) {
-            throw new AppError('User not found', 404)
-        }
+
+        if (!user) throw new AppError('User not found', 404)
+
         res.json({ status: 'success', data: user })
+
     } catch (err) {
         next(err)
     }
