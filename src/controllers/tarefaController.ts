@@ -43,6 +43,19 @@ export const getTarefas = async (req: Request, res: Response)=> {
     res.json({status:'sucess', 'data': tarefas})
 }
 
+export const getMetasTarefas = async (req: Request, res: Response) => {
+    const tarefas = await tarefaRepository.find({
+        where: {user: {id:+req.params.userId}},
+        select: ['id','registro_tempo','descricao','data_inicio','data_fim' ],
+
+            relations: {
+                meta: true,
+            },
+    })
+
+    return res.json({status:'sucess', 'data': tarefas})
+}
+
 export const updateTarefa = async (req: Request, res: Response) => {
     const tarefa = await tarefaRepository.findOne({
         where: {

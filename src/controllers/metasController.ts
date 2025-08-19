@@ -39,6 +39,19 @@ export const getMetasByUser = async (req: Request, res: Response)=> {
    res.json({status:'sucess', data: metas})
 }
 
+export const getMetasTarefas = async (req: Request, res: Response) => {
+    const metasTarefas = await metaRepository.find({
+        where: {user: {id:+req.params.userId}},
+        select: ['id','descricao','data_inicio','data_fim' ],
+
+        relations: {
+            tarefa: true,
+        },
+    })
+
+    return res.json({status:'sucess', 'data': metasTarefas})
+}
+
 export const getUmaMetaByUser = async (req: Request, res: Response)=> {
      const UmaMeta = await metaRepository.findOne({
          where: {user: {id: +req.params.userId}, id: +req.params.metaId},
