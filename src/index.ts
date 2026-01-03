@@ -21,10 +21,12 @@ app.use(helmet())
 app.use(cors())
 app.use(express.json({ limit: '10kb' }))
 
-// Routes
-app.use('/api/v1/users', userRoutes)
+// Rotas Públicas
 app.use('/auth', authRoutes)
-app.use('/users', checkJwt, userRoutes)
+app.use('/users', userRoutes) //protegida localmente no arquivo userRoutes
+
+//Rotas Protegida
+app.use(checkJwt)
 app.use('/metas', metasRoutes)
 app.use('/tarefa', tarefaRoutes)
 
