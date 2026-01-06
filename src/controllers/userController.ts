@@ -19,7 +19,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = await userRepository.findOne({
-            where: { id: parseInt(req.params.id) },
+            where: { id: req.userId},
             select: ['id', 'name', 'email', 'createdAt'],
         })
 
@@ -58,7 +58,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = await userRepository.findOne({
-            where: { id: parseInt(req.params.id) },
+            where: {id: req.userId},
         })
 
         if (!user) {
@@ -83,7 +83,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await userRepository.delete(req.params.id)
+        const result = await userRepository.delete({id: req.userId})
 
         if (result.affected === 0) {
             throw new AppError('User not found', 404)

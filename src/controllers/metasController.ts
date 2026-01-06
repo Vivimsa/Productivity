@@ -1,14 +1,20 @@
 import { Request, Response, NextFunction } from 'express'
 import { AppDataSource } from '../config/database'
 import { Meta } from '../models/Meta'
+import { User } from '../models/User'
 import { AppError } from '../middleware/errorHandler'
 import {validateOrReject} from "class-validator";
-import {User} from "../models/User";
 
+
+const userRepository = AppDataSource.getRepository(User)
 const metaRepository = AppDataSource.getRepository(Meta)
 export const cadastrarMeta = async (req: Request, res: Response,next: NextFunction) => {
-    const {descricao, data_inicio,data_fim,user} = req.body
-    const meta = metaRepository.create({descricao, data_inicio,data_fim, user})
+    const userId = await userRepository.findOne({
+        where: {id: req.userId},
+        select : ['id']
+    });
+    const {descricao, data_inicio,data_fim} = req.body
+    const meta = metaRepository.create({descricao, data_inicio,data_fim, user: userId!})
     await validateOrReject(meta)
     await metaRepository.save(meta)
 
@@ -16,7 +22,7 @@ export const cadastrarMeta = async (req: Request, res: Response,next: NextFuncti
         status:'sucess',
             data:{
             id: meta.id,
-            user: meta.user,
+            user: req.userId,
             descricao: meta.descricao,
             data_inicio: meta.data_inicio,
             data_fim: meta.data_fim
@@ -25,8 +31,9 @@ export const cadastrarMeta = async (req: Request, res: Response,next: NextFuncti
 }
 
 export const getMetasByUser = async (req: Request, res: Response)=> {
+
     const metas = await metaRepository.find({
-        where: {user: {id: +req.params.userId}},
+        where: {user: {id: req.userId}},
         select: {
             id: true,
             descricao: true,
@@ -54,7 +61,7 @@ export const getMetasTarefas = async (req: Request, res: Response) => {
 
 export const getUmaMetaByUser = async (req: Request, res: Response)=> {
      const UmaMeta = await metaRepository.findOne({
-         where: {user: {id: +req.params.userId}, id: +req.params.metaId},
+         where: {user: {id: req.userId}, id: +req.params.metaId},
          select: {
              id: true,
              user: true,
@@ -65,7 +72,7 @@ export const getUmaMetaByUser = async (req: Request, res: Response)=> {
  }
 
  export const updateMeta = async (req:Request, res:Response) => {
-    const meta = await metaRepository.findOne({ where: {user: {id: +req.params.userId}, id: +req.params.metaId} });
+    const meta = await metaRepository.findOne({ where: {user: {id: req.userId}, id: +req.params.metaId} });
 
     if (!meta) {
         return res.status(404).json({ status: 'error', message: 'Meta não encontrada' });
@@ -80,14 +87,15 @@ export const getUmaMetaByUser = async (req: Request, res: Response)=> {
 
 export const deleteMeta = async(req: Request, res: Response)=> {
     const meta = await metaRepository.findOne({
-        where: {user: {id: +req.params.id}, id:+req.params.id}
+        where: {user: {id: req.userId}, id:+req.params.metaId}
     })
 
     if (meta) {
         await metaRepository.delete(meta)
+        res.json({status:'sucess', message: "Meta excluída com sucesso!"})
     }
 
-    res.json({status:'sucess', message: "Meta excluída com sucesso!"})
+    res.json({status:'error', message: "Meta não encontrada!"})
 }
 
 
