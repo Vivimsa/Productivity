@@ -6,8 +6,9 @@ import {AppError} from "../middleware/errorHandler";
 const tarefaRepository = AppDataSource.getRepository(Tarefa)
 
 export const cadastrarTarefa = async (req: Request, res: Response) => {
-    const {descricao, registro_tempo, data_inicio, data_fim, metaId, userId} = req.body
-    const tarefa = tarefaRepository.create({descricao, registro_tempo, data_inicio, data_fim, meta:{id:metaId}, user:{id:userId}})
+
+    const {descricao, registro_tempo, data_inicio, data_fim, metaId} = req.body
+    const tarefa = tarefaRepository.create({descricao, registro_tempo, data_inicio, data_fim, meta:{id:metaId}, user:{id:req.userId}})
     await tarefaRepository.save(tarefa)
     res.json({status:'sucess', data: tarefa})
 }
@@ -15,12 +16,11 @@ export const cadastrarTarefa = async (req: Request, res: Response) => {
 export const getTarefa = async (req: Request, res: Response, next: NextFunction) => {
     const tarefa = await tarefaRepository.findOne({
         where: {
-            user: { id: +req.params.userId },
+            user: { id: req.userId },
             meta: { id: +req.params.metaId },
             id: +req.params.tarefaId
         },
         relations: {
-            user: true,
             meta: true
         },
     })
@@ -34,7 +34,7 @@ export const getTarefa = async (req: Request, res: Response, next: NextFunction)
 
 export const getTarefas = async (req: Request, res: Response)=> {
     const tarefas = await tarefaRepository.find({
-        where: {user: {id:+req.params.userId}, meta:{id:+req.params.metaId}},
+        where: {user: {id:req.userId}, meta:{id:+req.params.metaId}},
         select: ['id','registro_tempo','descricao','data_inicio','data_fim' ]
     })
 
@@ -45,7 +45,7 @@ export const getTarefas = async (req: Request, res: Response)=> {
 
 export const getMetasTarefas = async (req: Request, res: Response) => {
     const tarefas = await tarefaRepository.find({
-        where: {user: {id:+req.params.userId}},
+        where: {user: {id:req.userId}},
         select: ['id','registro_tempo','descricao','data_inicio','data_fim' ],
 
             relations: {
@@ -59,7 +59,7 @@ export const getMetasTarefas = async (req: Request, res: Response) => {
 export const updateTarefa = async (req: Request, res: Response) => {
     const tarefa = await tarefaRepository.findOne({
         where: {
-            user: { id: +req.params.userId },
+            user: { id: req.userId },
             meta: { id: +req.params.metaId },
             id: +req.params.tarefaId
         }
@@ -74,7 +74,7 @@ export const updateTarefa = async (req: Request, res: Response) => {
 export const deleteTarefa = async (req: Request, res: Response)=> {
     const tarefa = await tarefaRepository.findOne({
         where: {
-            user: { id: +req.params.userId },
+            user: { id: req.userId },
             meta: { id: +req.params.metaId },
             id: +req.params.tarefaId
         }
