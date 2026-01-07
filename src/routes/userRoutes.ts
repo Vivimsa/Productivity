@@ -10,14 +10,14 @@ import {checkJwt} from "../middleware/checkJwt";
 
 const router = Router()
 
-router.route('/')
+router.route('/user')
     .get(checkJwt,getUsers)
     .post(createUser)
 
-router.route('/:id')
+router.route('/user/:id')
     .all(checkJwt)
     .get(getUser)
-    .patch(updateUser)
+    .put(updateUser)
     .delete(deleteUser)
 
 export default router

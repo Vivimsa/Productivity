@@ -2,8 +2,43 @@ import { Request, Response, NextFunction } from 'express'
 import { AppDataSource } from '../config/database'
 import { User } from '../models/User'
 import { AppError } from '../middleware/errorHandler'
+import jwt from "jsonwebtoken";
 
 const userRepository = AppDataSource.getRepository(User)
+
+export const index = async (req: Request, res: Response) =>
+{
+    const users = await userRepository.find()
+    return res.json(users)
+}
+
+export const createUser = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { name, email, password } = req.body
+        if (!name || !email || !password) {
+            throw new AppError('Please provide name, email and password', 400)
+        }
+
+        const user = userRepository.create({ name, email, password })
+        await userRepository.save(user)
+
+        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
+            expiresIn: '1h',
+        });
+
+        res.status(201).json({
+            status: 'success',
+            data: {
+                id: user.id,
+                name: user.name,
+                email: user.email,
+                token: token,
+            },
+        })
+    } catch (err) {
+        next(err)
+    }
+}
 
 export const getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -32,28 +67,6 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
     }
 }
 
-export const createUser = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const { name, email, password } = req.body
-        if (!name || !email || !password) {
-            throw new AppError('Please provide name, email and password', 400)
-        }
-
-        const user = userRepository.create({ name, email, password })
-        await userRepository.save(user)
-
-        res.status(201).json({
-            status: 'success',
-            data: {
-                id: user.id,
-                name: user.name,
-                email: user.email,
-            },
-        })
-    } catch (err) {
-        next(err)
-    }
-}
 
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -83,7 +96,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await userRepository.delete({id: req.userId})
+        const result = await userRepository.softDelete({id: req.userId})
 
         if (result.affected === 0) {
             throw new AppError('User not found', 404)

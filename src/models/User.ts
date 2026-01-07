@@ -6,14 +6,14 @@ import {
     UpdateDateColumn,
     BeforeInsert,
     BeforeUpdate,
-    OneToMany
+    OneToMany, DeleteDateColumn
 } from 'typeorm'
 import bcrypt from 'bcrypt'
 import {Meta} from "./Meta";
 import {Tarefa} from "./Tarefa";
 
 
-@Entity()
+@Entity('users')
 export class User {
     @PrimaryGeneratedColumn()
     id!: number
@@ -24,19 +24,25 @@ export class User {
     @Column({ unique: true })
     email!: string
 
+    @Column({type: 'datetime', nullable: true, name:'email_verified_at'})
+    emailVerifiedAt!: Date | null
+
     @Column()
     password!: string
 
-    @CreateDateColumn()
+    @CreateDateColumn({name:'created_at'})
     createdAt!: Date
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({name:'updated_at'})
     updatedAt!: Date
 
-    @OneToMany(() => Meta,(meta) => meta.user,{onDelete:'CASCADE'})
+    @DeleteDateColumn({name:'deleted_at'})
+    deletedAt!: Date | null
+
+    @OneToMany(() => Meta,(meta) => meta.user)
     metas!:Meta[]
 
-    @OneToMany(() => Tarefa,(tarefa) => tarefa.user,{onDelete:'CASCADE'})
+    @OneToMany(() => Tarefa,(tarefa) => tarefa.user,)
     tarefa!: Tarefa[]
 
     @BeforeInsert()
@@ -45,6 +51,14 @@ export class User {
         if (this.password) {
             const salt = await bcrypt.genSalt(10);
             this.password = await bcrypt.hash(this.password, salt);
+        }
+    }
+
+    @BeforeInsert()
+    @BeforeUpdate()
+    emailToLowerCase() {
+        if (this.email) {
+            this.email = this.email.toLowerCase();
         }
     }
 }

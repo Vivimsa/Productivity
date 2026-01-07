@@ -22,8 +22,8 @@ app.use(cors())
 app.use(express.json({ limit: '10kb' }))
 
 // Rotas Públicas
-app.use('/auth', authRoutes)
-app.use('/users', userRoutes) //protegida localmente no arquivo userRoutes
+app.use('/api', authRoutes)
+app.use('/api', userRoutes) //protegida localmente no arquivo userRoutes
 
 //Rotas Protegida
 app.use(checkJwt)
