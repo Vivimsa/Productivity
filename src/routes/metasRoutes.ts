@@ -10,10 +10,10 @@ import {
 
 const router=Router()
 
-router.route('/').post(cadastrarMeta)
+router.route('/metas').post(cadastrarMeta)
 router.route('/user/:userId').get(getMetasByUser)
 router.route('/metasTarefas').get(getMetasTarefas)
-router.route('/:metaId').get(getUmaMetaByUser).put(updateMeta).delete(deleteMeta)
+router.route('/metas/:metaId').get(getUmaMetaByUser).put(updateMeta).delete(deleteMeta)
 
 
 export default router

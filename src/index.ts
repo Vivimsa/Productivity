@@ -27,8 +27,8 @@ app.use('/api', userRoutes) //protegida localmente no arquivo userRoutes
 
 //Rotas Protegida
 app.use(checkJwt)
-app.use('/metas', metasRoutes)
-app.use('/tarefa', tarefaRoutes)
+app.use('/api', metasRoutes)
+app.use('/api', tarefaRoutes)
 
 // Global error handling
 app.use(errorHandler)

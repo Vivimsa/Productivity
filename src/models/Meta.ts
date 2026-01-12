@@ -2,7 +2,7 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
-    ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn
+    ManyToOne, OneToMany, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, JoinColumn, RelationId
 } from 'typeorm'
 import {User} from "./User";
 import {Tarefa} from "./Tarefa"
@@ -33,13 +33,17 @@ export class Meta{
     @IsDateString()
     concluida_em?:string|null;
 
-    @CreateDateColumn()
+    @CreateDateColumn({name:'created_at'})
     created_at!:Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({name:'updated_at'})
     updated_at!:Date;
 
+    @DeleteDateColumn({name: 'deleted_at'})
+    deleted_at!: Date | null
+
     @ManyToOne(() => User,(user) => user.metas,{onDelete:'CASCADE'})
+    @JoinColumn({name:'user_id'})
     user!:User
 
     @OneToMany(() => Tarefa,(tarefa) => tarefa.meta, {onDelete:'CASCADE'})

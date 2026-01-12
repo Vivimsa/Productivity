@@ -4,7 +4,7 @@ import { AppError } from './errorHandler';
 
 declare module 'express' {
     interface Request {
-        userId?: number;
+        user_id?: number;
     }
 }
 export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
@@ -14,8 +14,8 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     }
     const token = authHeader.split(' ')[1];
     try {
-        const payload = jwt.verify(token, process.env.JWT_SECRET!) as { userId: number };
-        req.userId = payload.userId;
+        const payload = jwt.verify(token, process.env.JWT_SECRET!) as { user_id: number };
+        req.user_id = payload.user_id;
         next();
     } catch {
         throw new AppError('Invalid token', 401);
