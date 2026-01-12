@@ -22,7 +22,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
         const user = userRepository.create({ name, email, password })
         await userRepository.save(user)
 
-        const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, {
+        const token = jwt.sign({ user_id: user.id }, process.env.JWT_SECRET!, {
             expiresIn: '1h',
         });
 
@@ -54,7 +54,7 @@ export const getUsers = async (req: Request, res: Response, next: NextFunction) 
 export const getUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = await userRepository.findOne({
-            where: { id: req.userId},
+            where: { id: req.user_id},
             select: ['id', 'name', 'email', 'createdAt'],
         })
 
@@ -71,7 +71,7 @@ export const getUser = async (req: Request, res: Response, next: NextFunction) =
 export const updateUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const user = await userRepository.findOne({
-            where: {id: req.userId},
+            where: {id: req.user_id},
         })
 
         if (!user) {
@@ -96,7 +96,7 @@ export const updateUser = async (req: Request, res: Response, next: NextFunction
 
 export const deleteUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const result = await userRepository.softDelete({id: req.userId})
+        const result = await userRepository.softDelete({id: req.user_id})
 
         if (result.affected === 0) {
             throw new AppError('User not found', 404)

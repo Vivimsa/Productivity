@@ -8,15 +8,15 @@ const tarefaRepository = AppDataSource.getRepository(Tarefa)
 export const cadastrarTarefa = async (req: Request, res: Response) => {
 
     const {descricao, registro_tempo, data_inicio, data_fim, metaId} = req.body
-    const tarefa = tarefaRepository.create({descricao, registro_tempo, data_inicio, data_fim, meta:{id:metaId}, user:{id:req.userId}})
+    const tarefa = tarefaRepository.create({titulo, descricao, concluida_em, data_expiracao, meta:{id:metaId}, user:{id:req.user_id}})
     await tarefaRepository.save(tarefa)
-    res.json({status:'sucess', data: tarefa})
+    res.json(tarefa)
 }
 
 export const getTarefa = async (req: Request, res: Response, next: NextFunction) => {
     const tarefa = await tarefaRepository.findOne({
         where: {
-            user: { id: req.userId },
+            user: { id: req.user_id },
             meta: { id: +req.params.metaId },
             id: +req.params.tarefaId
         },
@@ -29,23 +29,23 @@ export const getTarefa = async (req: Request, res: Response, next: NextFunction)
         return res.status(404).json({message: 'Tarefa não encontrada' })
     }
 
-    return res.json({ status: 'success', data: tarefa})
+    return res.json(tarefa)
 }
 
 export const getTarefas = async (req: Request, res: Response)=> {
     const tarefas = await tarefaRepository.find({
-        where: {user: {id:req.userId}, meta:{id:+req.params.metaId}},
+        where: {user: {id:req.user_id}, meta:{id:+req.params.metaId}},
         select: ['id','registro_tempo','descricao','data_inicio','data_fim' ]
     })
 
     if(!tarefas) throw new AppError('Tarefa não encontrada', 404)
 
-    res.json({status:'sucess', 'data': tarefas})
+    res.json(tarefas)
 }
 
 export const getMetasTarefas = async (req: Request, res: Response) => {
     const tarefas = await tarefaRepository.find({
-        where: {user: {id:req.userId}},
+        where: {user: {id:req.user_id}},
         select: ['id','registro_tempo','descricao','data_inicio','data_fim' ],
 
             relations: {
@@ -53,13 +53,13 @@ export const getMetasTarefas = async (req: Request, res: Response) => {
             },
     })
 
-    return res.json({status:'sucess', 'data': tarefas})
+    return res.json(tarefas)
 }
 
 export const updateTarefa = async (req: Request, res: Response) => {
     const tarefa = await tarefaRepository.findOne({
         where: {
-            user: { id: req.userId },
+            user: { id: req.user_id },
             meta: { id: +req.params.metaId },
             id: +req.params.tarefaId
         }
@@ -68,19 +68,19 @@ export const updateTarefa = async (req: Request, res: Response) => {
     if(!tarefa) throw new AppError('tarefa não encontrada',404)
     tarefaRepository.merge(tarefa,req.body)
     const updateTarefa = await tarefaRepository.save(tarefa)
-    res.json({updateTarefa})
+    res.json(updateTarefa)
 }
 
 export const deleteTarefa = async (req: Request, res: Response)=> {
     const tarefa = await tarefaRepository.findOne({
         where: {
-            user: { id: req.userId },
+            user: { id: req.user_id },
             meta: { id: +req.params.metaId },
             id: +req.params.tarefaId
         }
     })
 
-    if(tarefa) await tarefaRepository.delete(tarefa)
+    if(tarefa) await tarefaRepository.softDelete(tarefa.id)
     res.send({message: 'Tarefa excluída com sucesso'})
 }
 

@@ -2,32 +2,48 @@ import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
-    ManyToOne
+    ManyToOne, DeleteDateColumn, CreateDateColumn, UpdateDateColumn, JoinColumn
 } from 'typeorm'
 import {User} from "./User";
-import {IsDateString, MinDate} from "class-validator";
+import {IsDateString, IsOptional, MinDate} from "class-validator";
 import {Meta} from "./Meta"
 
-@Entity()
+@Entity('tarefas')
 export class Tarefa{
     @PrimaryGeneratedColumn()
     id!:number
 
     @Column()
-    descricao!:string
+    titulo!:string
 
     @Column()
-    registro_tempo!:string
+    @IsOptional()
+    descricao?:string | null
+
+    @Column({type:'datetime'})
+    @IsOptional()
+    @IsDateString()
+    concluida_em?:string | null
 
     @Column({type:'date'})
+    @IsOptional()
     @IsDateString({}, { message: 'data_inicio deve ser uma data ISO válida (yyyy-MM-dd)' })
-    data_inicio!:string
+    data_expiracao?:string | null
 
-    @Column({type:'date'})
-    @IsDateString({}, { message: 'data_fim deve ser uma data ISO válida (yyyy-MM-dd)' })
-    data_fim!:string
+    @Column({default:'a_fazer'})
+    status!: string
+
+    @CreateDateColumn({name:'created_at'})
+    created_at!:Date;
+
+    @UpdateDateColumn({name:'updated_at'})
+    updated_at!:Date;
+
+    @DeleteDateColumn({name: 'deleted_at'})
+    deleted_at!: Date | null
 
     @ManyToOne(() => Meta,(meta) => meta.tarefa,{onDelete:'CASCADE'})
+    @JoinColumn({'name': meta_id})
     meta!:Meta
 
     @ManyToOne(() => User,(user)=> user.tarefa,{onDelete:'CASCADE'})

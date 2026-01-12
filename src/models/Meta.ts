@@ -21,8 +21,9 @@ export class Meta{
     descricao!:string
 
     @Column({type:'tinyint', default:1, unsigned: true})
+    @IsOptional()
     @IsInt()
-    prioridade!:number
+    prioridade?:number|null
 
     @Column({type: 'date'})
     @IsDateString({}, { message: 'data_expiracao deve ser uma data ISO válida (yyyy-MM-dd)' })
