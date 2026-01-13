@@ -16,7 +16,7 @@ export class Tarefa{
     @Column()
     titulo!:string
 
-    @Column()
+    @Column({ type: 'text', nullable: true })
     @IsOptional()
     descricao?:string | null
 
@@ -43,7 +43,7 @@ export class Tarefa{
     deleted_at!: Date | null
 
     @ManyToOne(() => Meta,(meta) => meta.tarefa,{onDelete:'CASCADE'})
-    @JoinColumn({'name': meta_id})
+    @JoinColumn({name: 'meta_id'})
     meta!:Meta
 
     @ManyToOne(() => User,(user)=> user.tarefa,{onDelete:'CASCADE'})

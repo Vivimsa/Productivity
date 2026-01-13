@@ -7,8 +7,8 @@ const tarefaRepository = AppDataSource.getRepository(Tarefa)
 
 export const cadastrarTarefa = async (req: Request, res: Response) => {
 
-    const {descricao, registro_tempo, data_inicio, data_fim, metaId} = req.body
-    const tarefa = tarefaRepository.create({titulo, descricao, concluida_em, data_expiracao, meta:{id:metaId}, user:{id:req.user_id}})
+    const {titulo, descricao, concluida_em, data_expiracao, status, meta_id} = req.body
+    const tarefa = tarefaRepository.create({titulo, descricao, concluida_em, data_expiracao, status, meta:{id:meta_id}, user:{id:req.user_id}})
     await tarefaRepository.save(tarefa)
     res.json(tarefa)
 }
@@ -34,8 +34,7 @@ export const getTarefa = async (req: Request, res: Response, next: NextFunction)
 
 export const getTarefas = async (req: Request, res: Response)=> {
     const tarefas = await tarefaRepository.find({
-        where: {user: {id:req.user_id}, meta:{id:+req.params.metaId}},
-        select: ['id','registro_tempo','descricao','data_inicio','data_fim' ]
+        where: {user: {id:req.user_id}, meta:{id:+req.params.metaId}}
     })
 
     if(!tarefas) throw new AppError('Tarefa não encontrada', 404)
@@ -46,8 +45,6 @@ export const getTarefas = async (req: Request, res: Response)=> {
 export const getMetasTarefas = async (req: Request, res: Response) => {
     const tarefas = await tarefaRepository.find({
         where: {user: {id:req.user_id}},
-        select: ['id','registro_tempo','descricao','data_inicio','data_fim' ],
-
             relations: {
                 meta: true,
             },
