@@ -14,11 +14,16 @@ import tarefaRoutes from "./routes/tarefaRoutes";
 dotenv.config()
 
 const app = express()
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 3001
 
 // Security middleware
 app.use(helmet())
-app.use(cors())
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}))
 app.use(express.json({ limit: '10kb' }))
 
 // Rotas Públicas
