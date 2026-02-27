@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import {
+    buscaTarefaPorMeta,
     cadastrarTarefa,
     deleteTarefa,
     getMetasTarefas,
@@ -13,6 +14,6 @@ const router = Router()
 router.route('/tarefa').post(cadastrarTarefa)
 router.route('/tarefa').get(getMetasTarefas)
 router.route('/tarefa/:tarefaId/meta/:metaId').get(getTarefa).put(updateTarefa).delete(deleteTarefa)
-router.route('/:metaId').get(getTarefas)
+router.route('/tarefas_por_meta/:metaId').get(getTarefas)
 export default router
 

@@ -53,6 +53,7 @@ export const getMetasTarefas = async (req: Request, res: Response) => {
     return res.json(tarefas)
 }
 
+
 export const updateTarefa = async (req: Request, res: Response) => {
     const tarefa = await tarefaRepository.findOne({
         where: {
