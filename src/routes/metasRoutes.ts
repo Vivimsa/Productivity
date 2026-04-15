@@ -11,7 +11,7 @@ import {
 const router=Router()
 
 router.route('/metas').post(cadastrarMeta)
-router.route('/user/:userId').get(getMetasByUser)
+router.route('/metas').get(getMetasByUser)
 router.route('/metasTarefas').get(getMetasTarefas)
 router.route('/metas/:metaId').get(getUmaMetaByUser).put(updateMeta).delete(deleteMeta)
 
